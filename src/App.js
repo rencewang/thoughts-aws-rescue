@@ -16,7 +16,6 @@ const Tag = {
 };
 
 function App() {
-  const [displayedPosts, setDisplayedPosts] = useState([]);
   const [allPosts, setAllPosts] = useState([]);
 
   const [currentPost, setCurrentPost] = useState({ content: '' });
@@ -24,7 +23,6 @@ function App() {
   const [selectedTag, setSelectedTag] = useState(Tag.ALL);
 
   const listRef = useRef(null);
-  const buttonRef = useRef(null);
   const overallRef = useRef(null);
 
   const [fontSize, setFontSize] = useState([100]);
@@ -69,15 +67,7 @@ function App() {
               return new Date(b.created_at) - new Date(a.created_at);
             });
             setAllPosts(sortedPosts);
-            setDisplayedPosts(sortedPosts);
             setCurrentPost(sortedPosts[0]);
-
-            // setThoughts(
-            //   sortedPosts.filter((post) => post.tags === Tag.THOUGHTS)
-            // );
-            // setLyrics(sortedPosts.filter((post) => post.tags === Tag.LYRICS));
-            // setQuotes(sortedPosts.filter((post) => post.tags === Tag.QUOTES));
-            // setMoments(sortedPosts.filter((post) => post.tags === Tag.MOMENTS));
           },
         });
       });
@@ -104,37 +94,6 @@ function App() {
       listRef.current.scrollTop = 0;
     }
   }, [selectedTag, allPosts]);
-
-  // mobile button to show list of posts
-  // TODO: modify this to a permanent item
-  const showList = () => {
-    listRef.current.classList.toggle('mobile-show');
-    buttonRef.current.classList.toggle('close-button-show');
-  };
-
-  // tag buttons to filter posts
-  // const filterPosts = (tag) => {
-  //   if (!listRef.current.classList.contains('post-list-mobile-show')) {
-  //     listRef.current.classList.add('mobile-show');
-  //     buttonRef.current.classList.add('close-button-show');
-  //   }
-
-  //   if (tag === Tag.THOUGHTS) {
-  //     setDisplayedPosts(thoughts);
-  //     setCurrentPost(thoughts[0]);
-  //   } else if (tag === Tag.LYRICS) {
-  //     setDisplayedPosts(lyrics);
-  //     setCurrentPost(lyrics[0]);
-  //   } else if (tag === Tag.QUOTES) {
-  //     setDisplayedPosts(quotes);
-  //     setCurrentPost(quotes[0]);
-  //   } else if (tag === Tag.MOMENTS) {
-  //     setCurrentPost(moments[0]);
-  //   } else if (tag === Tag.ALL) {
-  //     setDisplayedPosts(allposts);
-  //     setCurrentPost(allposts[0]);
-  //   }
-  // };
 
   // make sure mobile height sizing is correct
   function getWindowDimensions() {
@@ -175,7 +134,7 @@ function App() {
       </nav>
 
       <div id="post-list" ref={listRef}>
-        {displayedPosts.map((post, index) => (
+        {allPosts.map((post, index) => (
           <h2
             key={index}
             style={{
@@ -203,14 +162,6 @@ function App() {
           </h2>
         ))}
       </div>
-
-      <button
-        className="post-list-mobile-close"
-        ref={buttonRef}
-        onClick={(e) => showList()}
-      >
-        close
-      </button>
 
       <div id="post-content">
         <div id="post-area">

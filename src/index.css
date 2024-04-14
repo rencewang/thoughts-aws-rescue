@@ -263,10 +263,6 @@ button:not(.preserve-button) {
   }
 }
 
-.post-list-mobile-close {
-  display: none;
-}
-
 #post-content {
   grid-area: con;
   width: 100%;
@@ -293,41 +289,6 @@ button:not(.preserve-button) {
     margin: auto 10px;
   }
 }
-
-/* @media screen and (max-width: 450px) {
-  #post-list {
-    z-index: 900;
-    position: fixed;
-    left: 0;
-    bottom: -100%;
-    width: 100%;
-    height: 200px;
-    border-top: 1px solid var(--blue);
-    transform: scale(1);
-    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.8s,
-      bottom 0.7s;
-  }
-
-  .mobile-show {
-    bottom: 0 !important;
-  }
-
-  .close-button-show {
-    top: calc(100% - 200px) !important;
-  }
-
-  .post-list-mobile-close {
-    z-index: 999;
-    display: block;
-    position: fixed;
-    top: 200%;
-    right: 10px;
-    font-size: 20px;
-    transform: scale(1);
-    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.8s,
-      bottom 0.7s, top 0.7s;
-  }
-} */
 
 /* Sliders */
 #post-resize {
@@ -376,43 +337,6 @@ button:not(.preserve-button) {
     height: 30px;
     margin: 0 auto;
   }
-}
-
-/* Login & Create */
-.login {
-  max-width: 600px;
-  margin: 30px min(5%, 30px);
-  font-size: 20px !important;
-}
-
-.login span {
-  padding-bottom: 30px;
-}
-
-.login button {
-  padding: 10px 0 !important;
-}
-
-#post-create > form {
-  max-width: 600px;
-  margin: 30px min(5%, 30px);
-  font-size: 20px !important;
-  display: flex;
-  flex-direction: column;
-}
-
-#post-create > form > div,
-#post-create textarea {
-  margin-bottom: 10px;
-}
-#post-create textarea {
-  resize: vertical;
-  min-height: 50px;
-  max-height: 200px;
-}
-
-#post-create textarea:focus {
-  outline: 0px solid transparent;
 }
 
 /* Markdown CSS */
