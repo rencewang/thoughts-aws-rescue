@@ -83,8 +83,8 @@ function App() {
     setCurrentHTML(sanitized);
   }, [currentPost]);
 
+  // set currentPost to first post of selected tag
   useEffect(() => {
-    // Find the first post that matches the selectedTag
     if (allPosts.length > 0) {
       const firstPostOfTag =
         selectedTag === Tag.ALL
@@ -131,6 +131,17 @@ function App() {
         <button onClick={(e) => setSelectedTag(Tag.MOMENTS)}>Moments</button>
         <button onClick={(e) => setSelectedTag(Tag.LYRICS)}>Lyrics</button>
         <button onClick={(e) => setSelectedTag(Tag.QUOTES)}>Quotes</button>
+        <button onClick={(e) => console.log('abc')} id="info-button">
+          Info
+        </button>
+        <span id="info">
+          This is the wall onto which I throw my random daily ideas and
+          playlists and audio clips and quotes. It's built with Create React App
+          and AWS, and the design is inspired by type foundry websites, so you
+          can edit the text and change its appearance :) <br /> <br />
+          No longer updated as of 2024, please visit wall.rence.la for the new
+          wall
+        </span>
       </nav>
 
       <div id="post-list" ref={listRef}>
@@ -178,7 +189,7 @@ function App() {
           />
 
           {currentPost.tags && (
-            <div>
+            <div style={{ marginBotton: '30px' }}>
               <span id="post-info">
                 Recorded on {currentPost.created_at} in {currentPost.tags}
               </span>
