@@ -8,6 +8,7 @@ import { Slider } from '@mui/material';
 import './index.css';
 
 const Tag = {
+  ALL: 'all',
   THOUGHTS: 'thoughts',
   LYRICS: 'lyrics',
   QUOTES: 'quotes',
@@ -16,14 +17,11 @@ const Tag = {
 
 function App() {
   const [displayedPosts, setDisplayedPosts] = useState([]);
-  const [allposts, setAllPosts] = useState([]);
-  const [thoughts, setThoughts] = useState([]);
-  const [lyrics, setLyrics] = useState([]);
-  const [quotes, setQuotes] = useState([]);
-  const [moments, setMoments] = useState([]);
+  const [allPosts, setAllPosts] = useState([]);
 
   const [currentPost, setCurrentPost] = useState({ content: '' });
   const [currentHTML, setCurrentHTML] = useState('');
+  const [selectedTag, setSelectedTag] = useState(Tag.ALL);
 
   const listRef = useRef(null);
   const buttonRef = useRef(null);
@@ -60,6 +58,7 @@ function App() {
           skipEmptyLines: true,
           complete: (results) => {
             const postsData = results.data.map((row) => ({
+              id: row.id,
               content: row.content,
               tags: row.tags,
               created_at: row.created_at,
@@ -71,13 +70,14 @@ function App() {
             });
             setAllPosts(sortedPosts);
             setDisplayedPosts(sortedPosts);
+            setCurrentPost(sortedPosts[0]);
 
-            setThoughts(
-              sortedPosts.filter((post) => post.tags === Tag.THOUGHTS)
-            );
-            setLyrics(sortedPosts.filter((post) => post.tags === Tag.LYRICS));
-            setQuotes(sortedPosts.filter((post) => post.tags === Tag.QUOTES));
-            setMoments(sortedPosts.filter((post) => post.tags === Tag.MOMENTS));
+            // setThoughts(
+            //   sortedPosts.filter((post) => post.tags === Tag.THOUGHTS)
+            // );
+            // setLyrics(sortedPosts.filter((post) => post.tags === Tag.LYRICS));
+            // setQuotes(sortedPosts.filter((post) => post.tags === Tag.QUOTES));
+            // setMoments(sortedPosts.filter((post) => post.tags === Tag.MOMENTS));
           },
         });
       });
@@ -93,6 +93,18 @@ function App() {
     setCurrentHTML(sanitized);
   }, [currentPost]);
 
+  useEffect(() => {
+    // Find the first post that matches the selectedTag
+    if (allPosts.length > 0) {
+      const firstPostOfTag =
+        selectedTag === Tag.ALL
+          ? allPosts[0]
+          : allPosts.find((post) => post.tags === selectedTag);
+      setCurrentPost(firstPostOfTag);
+      listRef.current.scrollTop = 0;
+    }
+  }, [selectedTag, allPosts]);
+
   // mobile button to show list of posts
   // TODO: modify this to a permanent item
   const showList = () => {
@@ -101,23 +113,28 @@ function App() {
   };
 
   // tag buttons to filter posts
-  const filterPosts = (tag) => {
-    if (!listRef.current.classList.contains('post-list-mobile-show')) {
-      listRef.current.classList.add('mobile-show');
-      buttonRef.current.classList.add('close-button-show');
-    }
-    if (tag === Tag.THOUGHTS) {
-      setDisplayedPosts(thoughts);
-    } else if (tag === Tag.LYRICS) {
-      setDisplayedPosts(lyrics);
-    } else if (tag === Tag.QUOTES) {
-      setDisplayedPosts(quotes);
-    } else if (tag === 'moments') {
-      setDisplayedPosts(moments);
-    } else if (tag === 'all') {
-      setDisplayedPosts(allposts);
-    }
-  };
+  // const filterPosts = (tag) => {
+  //   if (!listRef.current.classList.contains('post-list-mobile-show')) {
+  //     listRef.current.classList.add('mobile-show');
+  //     buttonRef.current.classList.add('close-button-show');
+  //   }
+
+  //   if (tag === Tag.THOUGHTS) {
+  //     setDisplayedPosts(thoughts);
+  //     setCurrentPost(thoughts[0]);
+  //   } else if (tag === Tag.LYRICS) {
+  //     setDisplayedPosts(lyrics);
+  //     setCurrentPost(lyrics[0]);
+  //   } else if (tag === Tag.QUOTES) {
+  //     setDisplayedPosts(quotes);
+  //     setCurrentPost(quotes[0]);
+  //   } else if (tag === Tag.MOMENTS) {
+  //     setCurrentPost(moments[0]);
+  //   } else if (tag === Tag.ALL) {
+  //     setDisplayedPosts(allposts);
+  //     setCurrentPost(allposts[0]);
+  //   }
+  // };
 
   // make sure mobile height sizing is correct
   function getWindowDimensions() {
@@ -150,17 +167,37 @@ function App() {
   return (
     <div id="overall" ref={overallRef}>
       <nav id="post-nav">
-        <button onClick={(e) => filterPosts('all')}>All</button>
-        <button onClick={(e) => filterPosts('thoughts')}>Thoughts</button>
-        <button onClick={(e) => filterPosts('moments')}>Moments</button>
-        <button onClick={(e) => filterPosts('lyrics')}>Lyrics</button>
-        <button onClick={(e) => filterPosts('quotes')}>Quotes</button>
+        <button onClick={(e) => setSelectedTag(Tag.ALL)}>All</button>
+        <button onClick={(e) => setSelectedTag(Tag.THOUGHTS)}>Thoughts</button>
+        <button onClick={(e) => setSelectedTag(Tag.MOMENTS)}>Moments</button>
+        <button onClick={(e) => setSelectedTag(Tag.LYRICS)}>Lyrics</button>
+        <button onClick={(e) => setSelectedTag(Tag.QUOTES)}>Quotes</button>
       </nav>
 
       <div id="post-list" ref={listRef}>
         {displayedPosts.map((post, index) => (
-          <h2 key={index}>
-            <button onClick={(e) => setCurrentPost(post)}>{post.time}</button>
+          <h2
+            key={index}
+            style={{
+              backgroundColor:
+                currentPost.id === post.id ? 'var(--blue)' : 'transparent',
+              pointerEvents:
+                selectedTag === post.tags || selectedTag === Tag.ALL
+                  ? 'auto'
+                  : 'none',
+            }}
+          >
+            <button
+              onClick={(e) => setCurrentPost(post)}
+              style={{
+                color:
+                  currentPost.id === post.id ? 'var(--white)' : 'var(--blue)',
+                opacity:
+                  selectedTag === post.tags || selectedTag === Tag.ALL ? 1 : 0,
+              }}
+            >
+              {post.time}
+            </button>
           </h2>
         ))}
       </div>

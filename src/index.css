@@ -138,7 +138,7 @@ table {
 
 * {
   font-family: 'Times New Roman', 'SimSun', 'STSong', serif !important;
-  color: var(--blue) !important;
+  color: var(--blue);
   font-size: 20px;
   -moz-animation: fadein 0.3s;
   -webkit-animation: fadein 0.3s;
@@ -246,7 +246,7 @@ button:not(.preserve-button) {
 
 @media (hover: hover) {
   #post-list > h2:hover {
-    background-color: var(--blue);
+    background-color: var(--blue) !important;
   }
 
   #post-list > h2:hover > button {
@@ -413,7 +413,7 @@ button:not(.preserve-button) {
 }
 
 #post-markdown :is(h1, h2, h3, h4, h5, h6, p) {
-  margin-bottom: 0.5em;
+  margin-bottom: 20px;
 }
 
 #post-info {
