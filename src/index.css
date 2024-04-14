@@ -416,6 +416,12 @@ button:not(.preserve-button) {
   margin-bottom: 0.5em;
 }
 
+#post-info {
+  margin-bottom: 30px;
+  background-color: var(--blue);
+  color: var(--white) !important;
+}
+
 h1,
 h2,
 h3,
@@ -460,8 +466,4 @@ i {
   to {
     opacity: 1;
   }
-}
-
-audio:focus {
-  outline: 0px solid transparent;
 }

@@ -9,7 +9,7 @@ import './index.css';
 
 const Tag = {
   THOUGHTS: 'thoughts',
-  PLAYLISTS: 'playlists',
+  LYRICS: 'lyrics',
   QUOTES: 'quotes',
   MOMENTS: 'moments',
 };
@@ -18,14 +18,12 @@ function App() {
   const [displayedPosts, setDisplayedPosts] = useState([]);
   const [allposts, setAllPosts] = useState([]);
   const [thoughts, setThoughts] = useState([]);
-  const [playlists, setPlaylists] = useState([]);
+  const [lyrics, setLyrics] = useState([]);
   const [quotes, setQuotes] = useState([]);
   const [moments, setMoments] = useState([]);
 
   const [currentPost, setCurrentPost] = useState({ content: '' });
   const [currentHTML, setCurrentHTML] = useState('');
-  const [currentTime, setCurrentTime] = useState('');
-  const [currentTag, setCurrentTag] = useState('');
 
   const listRef = useRef(null);
   const buttonRef = useRef(null);
@@ -34,6 +32,23 @@ function App() {
   const [fontSize, setFontSize] = useState([100]);
   const [letterSpacing, setLetterSpacing] = useState([-0.05]);
   const [lineHeight, setLineHeight] = useState([0.9]);
+
+  const formatTime = (time) => {
+    const date = new Date(time);
+
+    const formattedDate = date.toLocaleDateString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    });
+
+    const formattedTime = date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    return `${formattedDate}, ${formattedTime}`;
+  };
 
   // hook to get data from csv
   useEffect(() => {
@@ -48,6 +63,7 @@ function App() {
               content: row.content,
               tags: row.tags,
               created_at: row.created_at,
+              time: formatTime(row.created_at),
             }));
 
             const sortedPosts = postsData.sort((a, b) => {
@@ -56,7 +72,12 @@ function App() {
             setAllPosts(sortedPosts);
             setDisplayedPosts(sortedPosts);
 
-            console.log(sortedPosts);
+            setThoughts(
+              sortedPosts.filter((post) => post.tags === Tag.THOUGHTS)
+            );
+            setLyrics(sortedPosts.filter((post) => post.tags === Tag.LYRICS));
+            setQuotes(sortedPosts.filter((post) => post.tags === Tag.QUOTES));
+            setMoments(sortedPosts.filter((post) => post.tags === Tag.MOMENTS));
           },
         });
       });
@@ -70,17 +91,6 @@ function App() {
       : "<p>This is the wall onto which I throw my random daily ideas and playlists and audio clips and quotes. It's built with Create React App and AWS, and the design is inspired by type foundry websites, so you can edit the text and change its appearance :)</p>";
 
     setCurrentHTML(sanitized);
-    setCurrentTime(currentPost.time ? convertDate(currentPost, 'words') : '');
-
-    if (currentPost.tag === Tag.PLAYLISTS) {
-      setCurrentTag('a Playlist');
-    } else if (currentPost.tag === Tag.QUOTES) {
-      setCurrentTag('a Quote');
-    } else if (currentPost.tag === Tag.THOUGHTS) {
-      setCurrentTag('a Thought');
-    } else if (currentPost.tag === Tag.MOMENTS) {
-      setCurrentTag('a Moment');
-    }
   }, [currentPost]);
 
   // mobile button to show list of posts
@@ -96,14 +106,14 @@ function App() {
       listRef.current.classList.add('mobile-show');
       buttonRef.current.classList.add('close-button-show');
     }
-    if (tag === 'thoughts') {
+    if (tag === Tag.THOUGHTS) {
       setDisplayedPosts(thoughts);
-    } else if (tag === 'playlists') {
-      setDisplayedPosts(playlists);
-    } else if (tag === 'quotes') {
+    } else if (tag === Tag.LYRICS) {
+      setDisplayedPosts(lyrics);
+    } else if (tag === Tag.QUOTES) {
       setDisplayedPosts(quotes);
-    } else if (tag === 'quotes') {
-      setDisplayedPosts(quotes);
+    } else if (tag === 'moments') {
+      setDisplayedPosts(moments);
     } else if (tag === 'all') {
       setDisplayedPosts(allposts);
     }
@@ -137,51 +147,20 @@ function App() {
     overallRef.current.style.height = height + 'px';
   }, [height, width]);
 
-  // date conversion for proper display in timezones
-  const convertDate = (post, type) => {
-    const date = new Date(post.time);
-    const createdAt = new Date(post.createdAt);
-    let words =
-      date
-        .toLocaleString('en-GB', { timeZone: 'America/New_York' })
-        .substring(0, 2) +
-      ' ' +
-      date.toLocaleString('default', { month: 'long' }) +
-      ' ' +
-      date.getFullYear() +
-      ' ' +
-      date
-        .toLocaleString('en-GB', { timeZone: 'America/New_York' })
-        .substring(12, 18) +
-      createdAt
-        .toLocaleString('en-GB', { timeZone: 'America/New_York' })
-        .substring(18, 20);
-    let numeric =
-      date
-        .toLocaleString('en-GB', { timeZone: 'America/New_York' })
-        .substring(0, 18) +
-      createdAt
-        .toLocaleString('en-GB', { timeZone: 'America/New_York' })
-        .substring(18, 20);
-    return type === 'numeric' ? numeric : words;
-  };
-
   return (
     <div id="overall" ref={overallRef}>
       <nav id="post-nav">
         <button onClick={(e) => filterPosts('all')}>All</button>
         <button onClick={(e) => filterPosts('thoughts')}>Thoughts</button>
         <button onClick={(e) => filterPosts('moments')}>Moments</button>
-        <button onClick={(e) => filterPosts('playlists')}>Playlists</button>
+        <button onClick={(e) => filterPosts('lyrics')}>Lyrics</button>
         <button onClick={(e) => filterPosts('quotes')}>Quotes</button>
       </nav>
 
       <div id="post-list" ref={listRef}>
-        {displayedPosts.map((post) => (
-          <h2 key={post.id}>
-            <button onClick={(e) => setCurrentPost(post)}>
-              {post.time ? convertDate(post, 'numeric') : 'a note'}
-            </button>
+        {displayedPosts.map((post, index) => (
+          <h2 key={index}>
+            <button onClick={(e) => setCurrentPost(post)}>{post.time}</button>
           </h2>
         ))}
       </div>
@@ -208,9 +187,11 @@ function App() {
             dangerouslySetInnerHTML={{ __html: currentHTML }}
           />
 
-          {currentTag && (
-            <div id="post-time" style={{ marginBottom: '30px' }}>
-              Recorded on {currentTime} as {currentTag}
+          {currentPost.tags && (
+            <div>
+              <span id="post-info">
+                Recorded on {currentPost.created_at} in {currentPost.tags}
+              </span>
             </div>
           )}
         </div>
