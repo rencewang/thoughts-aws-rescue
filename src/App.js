@@ -193,7 +193,9 @@ function App() {
                 color:
                   currentPost.id === post.id ? 'var(--white)' : 'var(--blue)',
                 opacity:
-                  selectedTag === post.tags || selectedTag === Tag.ALL ? 1 : 0,
+                  selectedTag === post.tags || selectedTag === Tag.ALL
+                    ? 1
+                    : 0.3,
               }}
             >
               {post.time}

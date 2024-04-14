@@ -203,9 +203,10 @@ button:not(.preserve-button) {
 @media screen and (max-width: 450px) {
   #overall {
     grid-template-columns: auto;
-    grid-template-rows: 35px auto;
+    grid-template-rows: 35px 200px auto;
     grid-template-areas:
       'nav'
+      'lst'
       'con';
   }
 }
@@ -242,6 +243,7 @@ button:not(.preserve-button) {
 #post-list > h2 > button {
   color: var(--blue);
   transition: color 0.3s;
+  width: 100%;
 }
 
 @media (hover: hover) {
@@ -287,6 +289,12 @@ button:not(.preserve-button) {
 }
 
 @media screen and (max-width: 450px) {
+  #post-area {
+    margin: auto 10px;
+  }
+}
+
+/* @media screen and (max-width: 450px) {
   #post-list {
     z-index: 900;
     position: fixed;
@@ -319,7 +327,7 @@ button:not(.preserve-button) {
     transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.8s,
       bottom 0.7s, top 0.7s;
   }
-}
+} */
 
 /* Sliders */
 #post-resize {
