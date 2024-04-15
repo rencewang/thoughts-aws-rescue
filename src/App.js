@@ -48,7 +48,7 @@ function App() {
 
   // hook to get data from csv
   useEffect(() => {
-    fetch('/wall_data.csv')
+    fetch('https://rencewang.github.io/wall-2022/wall_data.csv')
       .then((response) => response.text())
       .then((data) => {
         Papa.parse(data, {
