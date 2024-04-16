@@ -1,6 +1,6 @@
 {
   "short_name": "Wall 2022",
-  "name": "Microblog, built in 2022 with AWS and CRA",
+  "name": "Microblog of thoughts, built in 2022 with AWS and CRA",
   "icons": [
     {
       "src": "favicon.ico",
